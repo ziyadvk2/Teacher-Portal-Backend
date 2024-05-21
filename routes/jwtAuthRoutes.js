@@ -14,7 +14,7 @@ module.exports = (app) => {
   // Registration endpoint
   app.post("/api/register", async (req, res) => {
     const { errors, isValid } = validateRegisterInput(req.body);
-    const { firstName, lastName, email, password } = req.body;
+    const { firstName, lastName, email, password, verifyPassword } = req.body;
     const name = `${firstName} ${lastName}`;
 
     if (!isValid) {
@@ -26,9 +26,15 @@ module.exports = (app) => {
         return res.status(400).json({ message: errors.email });
       } else if (!password) {
         return res.status(400).json({ message: errors.password });
+      }else if (!password) {
+        return res.status(400).json({ message: errors.verifyPassword });
       } else {
         return res.status(400).json({ message: "Credentials Invalid" });
       }
+    }
+
+    if (password !== verifyPassword) {
+      return res.status(400).json({ message: "Passwords do not match" });
     }
 
     const existingUser = await User.findOne({ email });
