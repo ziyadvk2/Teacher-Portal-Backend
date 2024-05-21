@@ -8,7 +8,7 @@ module.exports = (app) =>{
 // Retrieve all students
 app.get('/api/allstudents',ensureAuthentication, async (req, res) => {
   try {
-    const students = await Student.find().populate('_user', 'email');
+    const students = await Student.find({_user: req.user._id}).populate('_user', 'name email');
     res.json(students);
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -18,7 +18,7 @@ app.get('/api/allstudents',ensureAuthentication, async (req, res) => {
 // Retrieve a student by ID
 app.get('/api/student/:id',ensureAuthentication, async (req, res) => {
   try {
-    const student = await Student.findById(req.params.id).populate('_user', 'email');
+    const student = await Student.findById(req.params.id).populate('_user', 'name email');
     if (!student) {
       return res.status(404).json({ message: 'Student not found' });
     }
@@ -46,7 +46,7 @@ app.post('/api/newstudent', ensureAuthentication, async (req, res) => {
   }
 
   try {
-    let student = await Student.findOne({ name, subjectName });
+    let student = await Student.findOne({ name, subjectName,_user: req.user._id });
     if (student) {
       student.mark = mark;
       student = await student.save();
