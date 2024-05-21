@@ -6,16 +6,16 @@ module.exports = function validateStudentInput(data) {
 
   data.name = !isEmpty(data.name) ? data.name : "";
   data.subjectName = !isEmpty(data.subjectName) ? data.subjectName : "";
-  data.mark = !isEmpty(data.mark) ? data.mark : "";
+  data.mark = !isEmpty(data.mark) ? data.mark.toString() : "";
 
   if (Validator.isEmpty(data.name)) {
-    errors.password = "Password field is required";
+    errors.name = "Name field is required";
   }
   if (Validator.isEmpty(data.subjectName)) {
-    errors.password = "Password field is required";
+    errors.subjectName = "Subject field is required";
   }
   if (Validator.isEmpty(data.mark)) {
-    errors.password = "Password field is required";
+    errors.mark = "Mark field is required";
   }
 
   return {

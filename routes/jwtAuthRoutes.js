@@ -26,7 +26,7 @@ module.exports = (app) => {
         return res.status(400).json({ message: errors.email });
       } else if (!password) {
         return res.status(400).json({ message: errors.password });
-      }else if (!password) {
+      }else if (!verifyPassword) {
         return res.status(400).json({ message: errors.verifyPassword });
       } else {
         return res.status(400).json({ message: "Credentials Invalid" });

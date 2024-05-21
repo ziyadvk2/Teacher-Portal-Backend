@@ -34,11 +34,11 @@ app.post('/api/newstudent', ensureAuthentication, async (req, res) => {
   const { name, subjectName, mark } = req.body;
 
   if (!isValid) {
-    if (!firstName) {
+    if (!name) {
       return res.status(400).json({ message: errors.name });
-    } else if (!lastName) {
+    } else if (!subjectName) {
       return res.status(400).json({ message: errors.subjectName });
-    } else if (!email) {
+    } else if (!mark) {
       return res.status(400).json({ message: errors.mark });
     } else {
       return res.status(400).json({ message: "Inputs Invalid" });
@@ -71,13 +71,14 @@ app.put('/api/student/:id', ensureAuthentication, async (req, res) => {
   const { errors, isValid } = validateStudentInput(req.body);
   const { id } = req.params;
   const updatedData = req.body;
+  const { name, subjectName, mark } = req.body;
   
   if (!isValid) {
-    if (!firstName) {
+    if (!name) {
       return res.status(400).json({ message: errors.name });
-    } else if (!lastName) {
+    } else if (!subjectName) {
       return res.status(400).json({ message: errors.subjectName });
-    } else if (!email) {
+    } else if (!mark) {
       return res.status(400).json({ message: errors.mark });
     } else {
       return res.status(400).json({ message: "Inputs Invalid" });
