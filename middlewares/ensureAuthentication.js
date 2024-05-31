@@ -1,8 +1,9 @@
-const passport = require("passport");
-module.exports = (req, res, next) => {
-  passport.authenticate("jwt", { session: false }, (err, user, info) => {
+import passport from 'passport';
+
+const ensureAuthentication = (req, res, next) => {
+  passport.authenticate('jwt', { session: false }, (err, user, info) => {
     if (err || !user) {
-      return res.status(401).json({ message: "Unauthorized" });
+      return res.status(401).json({ message: 'Unauthorized' });
     }
     const userData = user.toObject ? user.toObject() : user;
     delete userData.password;
@@ -10,3 +11,5 @@ module.exports = (req, res, next) => {
     next();
   })(req, res, next);
 };
+
+export default ensureAuthentication;

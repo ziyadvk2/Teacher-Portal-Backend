@@ -1,9 +1,10 @@
-// models/Student.js
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
-const StudentSchema = new mongoose.Schema({
+const { Schema } = mongoose;
+
+const StudentSchema = new Schema({
   _user: {
-    type: mongoose.Schema.Types.ObjectId,
+    type: Schema.Types.ObjectId,
     ref: 'users',
     required: true,
   },
@@ -19,6 +20,8 @@ const StudentSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
- 
-});
-module.exports = mongoose.model('students', StudentSchema);
+},{ timestamps: true });
+
+const Student = mongoose.model('students', StudentSchema);
+
+export default Student;

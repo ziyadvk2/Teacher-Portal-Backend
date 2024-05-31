@@ -1,16 +1,12 @@
-const mongoose = require("mongoose");
-const bcrypt = require("bcryptjs");
-const passport = require("passport");
-const User = mongoose.model("users");
-const {
-  generateAccessToken,
-  generateRefreshToken,
-} = require("../middlewares/jwt");
-const validateRegisterInput = require("../validation/registerValidator");
-const validateLoginInput = require("../validation/loginValidator");
-const ensureAuthentication = require("../middlewares/ensureAuthentication");
+import mongoose from 'mongoose';
+import { generateAccessToken, generateRefreshToken } from '../middlewares/jwt.js';
+import validateRegisterInput from '../validation/registerValidator.js';
+import validateLoginInput from '../validation/loginValidator.js';
+import ensureAuthentication from '../middlewares/ensureAuthentication.js';
 
-module.exports = (app) => {
+const User = mongoose.model('users');
+
+const authRoutes = (app) => {
   // Registration endpoint
   app.post("/api/register", async (req, res) => {
     const { errors, isValid } = validateRegisterInput(req.body);
@@ -18,23 +14,19 @@ module.exports = (app) => {
     const name = `${firstName} ${lastName}`;
 
     if (!isValid) {
-      if (!firstName) {
+      if (errors.firstName) {
         return res.status(400).json({ message: errors.firstName });
-      } else if (!lastName) {
+      } else if (errors.lastName) {
         return res.status(400).json({ message: errors.lastName });
-      } else if (!email) {
+      } else if (errors.email) {
         return res.status(400).json({ message: errors.email });
-      } else if (!password) {
+      } else if (errors.password) {
         return res.status(400).json({ message: errors.password });
-      }else if (!verifyPassword) {
+      }else if (errors.verifyPassword) {
         return res.status(400).json({ message: errors.verifyPassword });
       } else {
         return res.status(400).json({ message: "Credentials Invalid" });
       }
-    }
-
-    if (password !== verifyPassword) {
-      return res.status(400).json({ message: "Passwords do not match" });
     }
 
     const existingUser = await User.findOne({ email });
@@ -59,9 +51,9 @@ module.exports = (app) => {
 
     // Check validation
     if (!isValid) {
-      if (!email) {
+      if (errors.email) {
         return res.status(400).json({ message: errors.email });
-      } else if (!password) {
+      } else if (errors.password) {
         return res.status(400).json({ message: errors.password });
       } else {
         return res.status(400).json({ message: "Credentials Invalid" });
@@ -102,3 +94,4 @@ module.exports = (app) => {
     }
   });
 };
+export default authRoutes;

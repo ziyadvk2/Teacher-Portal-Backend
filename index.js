@@ -1,13 +1,15 @@
-const express = require('express');
-const mongoose = require('mongoose');
-const keys = require('./config/keys');
-const cookieSession = require('cookie-session');
-const passport = require("passport");
-var bodyParser = require("body-parser")
-
-require('./models/User');
-require('./models/Student');
-require('./services/passportConfiguration');
+import express from 'express';
+import mongoose from 'mongoose';
+import cookieSession from 'cookie-session';
+import passport from 'passport';
+import bodyParser from 'body-parser';
+import cors from 'cors';
+import './models/User.js';
+import './models/Student.js';
+import './services/passportConfiguration.js';
+import studentRoutes from './routes/studentRoutes.js';
+import authRoutes from './routes/authRoutes.js';
+import keys from './config/keys.js';
 
 
 const app = express();
@@ -24,21 +26,13 @@ app.use(cookieSession({
 }))
 app.use(passport.initialize());
 app.use(passport.session());
-require('./routes/studentRoutes')(app);
-require('./routes/jwtAuthRoutes')(app);
-
-
-if(process.env.NODE_ENV === 'production'){
-    app.use(express.static('client/build'));
-
-    const path = require('path');
-    app.get('*',(req,res)=>{
-        res.sendFile(path.resolve(__dirname,'client','build','index.html'));
-    });
-}
-
+app.use(cors());
+studentRoutes(app);
+authRoutes(app);
 
 
 const PORT = process.env.PORT || 5000
-app.listen(PORT);
+app.listen(PORT,()=>{
+    console.log(`server is Running on ${PORT}`);
+});
 

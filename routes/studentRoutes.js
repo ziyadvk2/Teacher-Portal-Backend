@@ -1,9 +1,10 @@
-const mongoose = require('mongoose');
-const Student = mongoose.model("students");
-const validateStudentInput = require("../validation/studentValidator")
-const  ensureAuthentication  = require('../middlewares/ensureAuthentication'); 
+import mongoose from 'mongoose';
+import validateStudentInput from '../validation/studentValidator.js';
+import ensureAuthentication from '../middlewares/ensureAuthentication.js';
 
-module.exports = (app) =>{
+const Student = mongoose.model('students');
+
+ const studentRoutes = (app) =>{
 
 // Retrieve all students
 app.get('/api/allstudents',ensureAuthentication, async (req, res) => {
@@ -34,11 +35,11 @@ app.post('/api/newstudent', ensureAuthentication, async (req, res) => {
   const { name, subjectName, mark } = req.body;
 
   if (!isValid) {
-    if (!name) {
+    if (errors.name) {
       return res.status(400).json({ message: errors.name });
-    } else if (!subjectName) {
+    } else if (errors.subjectName) {
       return res.status(400).json({ message: errors.subjectName });
-    } else if (!mark) {
+    } else if (errors.mark) {
       return res.status(400).json({ message: errors.mark });
     } else {
       return res.status(400).json({ message: "Inputs Invalid" });
@@ -74,11 +75,11 @@ app.put('/api/student/:id', ensureAuthentication, async (req, res) => {
   const { name, subjectName, mark } = req.body;
   
   if (!isValid) {
-    if (!name) {
+    if (errors.name) {
       return res.status(400).json({ message: errors.name });
-    } else if (!subjectName) {
+    } else if (errors.subjectName) {
       return res.status(400).json({ message: errors.subjectName });
-    } else if (!mark) {
+    } else if (errors.mark) {
       return res.status(400).json({ message: errors.mark });
     } else {
       return res.status(400).json({ message: "Inputs Invalid" });
@@ -116,3 +117,4 @@ app.delete('/api/student/:id', ensureAuthentication, async (req, res) => {
 
 
 }
+export default studentRoutes;

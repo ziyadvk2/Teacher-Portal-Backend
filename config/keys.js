@@ -1,8 +1,17 @@
+let keys;
 if(process.env.NODE_ENV === 'production'){
-    //return the production set of keys
-    module.exports = require('./prod')
+    const loadProdKeys = async () => {
+        const { default: prodKeys } = await import('./prod.js');
+        return prodKeys;
+    };
+    keys = await loadProdKeys();
 
 }else{
     //returning the dev keys
-    module.exports= require('./dev');
+    const loadDevKeys = async () => {
+        const { default: devKeys } = await import('./dev.js');
+        return devKeys;
+    };
+    keys = await loadDevKeys();
 }
+export default keys;
